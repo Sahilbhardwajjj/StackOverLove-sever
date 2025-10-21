@@ -1,6 +1,6 @@
 # StackOverLove ❤️‍🔥
 
-## A Dating & Networking Platform for Developers
+## A Dating & Networking Platform for Developers .
 
 ## 📌 Project Overview
 
