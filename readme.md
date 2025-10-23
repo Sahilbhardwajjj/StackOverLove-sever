@@ -98,11 +98,7 @@ Contributions are what make the open-source community an amazing place to learn,
 4.  Push to the Branch (`git push origin feature/AmazingFeature`).
 5.  Open a **Merge Request**.
 
-## 📝 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
 ## 📞 Contact
 
-Your Name/Team Name - Your Email Address
+Email - krishnabhardwaj251978@gmail.com
 Project Link: `[https://github.com/YourUsername/StackOverLove](https://github.com/YourUsername/StackOverLove)`
