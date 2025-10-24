@@ -1,20 +1,23 @@
 const express = require("express");
 const app = express();
 
-app.get(
-  "/user",
-  (req, res) => {
-    console.log("1st Route");
-    next();
-  },
-  (req, res) => {
-    console.log("2nd Route");
-    next();
-  },
-  (req, res) => {
-    console.log("3rd Route");
-    res.send("3rd File");
-  }
-);
+const first = (req, res, next) => {
+  console.log("I am First");
+  next();
+};
 
-app.listen(3000, console.log("Server is listening to port 3000"));
+const second = (req, res, next) => {
+  console.log("I am Second");
+  next();
+};
+
+const third = (req, res, next) => {
+  console.log("I am Third");
+  res.send("I am 3rd");
+};
+
+app.get("/user", [first, second, third]);
+
+app.listen(3000, () => {
+  console.log("Server is listening to port 3000");
+});
