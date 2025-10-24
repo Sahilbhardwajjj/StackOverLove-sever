@@ -1,6 +1,6 @@
 // Admin Authorization for all GET,POST,PATCH,DELETE requests
-export const adminAuth = (req, res, next) => {
-  const token = "xyz123";
+const adminAuth = (req, res, next) => {
+  const token = "xyz";
   const isAuthorized = token === "xyz";
 
   if (!isAuthorized) {
@@ -8,4 +8,8 @@ export const adminAuth = (req, res, next) => {
   } else {
     next();
   }
+};
+
+module.exports = {
+  adminAuth,
 };
