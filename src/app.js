@@ -6,18 +6,22 @@ const app = express();
 
 app.post("/signup", async (req, res) => {
   const userObj = {
-    username: "onlySahil",
-    firstName: "Sahil",
-    email: "sahil123@gmail.com",
-    password: "sahil#1234",
-    role: "user",
+    username: "onlyRiya",
+    firstName: "Riya",
+    email: "riya123@gmail.com",
+    password: "ria#1234",
+    role: "admin",
   };
 
   // Creating a new instance of the User Model
   const user = new User(userObj);
 
-  await user.save();
-  res.send("User Added Succesfully");
+  try {
+    await user.save();
+    res.send("User Added Succesfully");
+  } catch (err) {
+    res.status(400).send("Error in saving the user Error:" + err.message);
+  }
 });
 
 dbConnect()
