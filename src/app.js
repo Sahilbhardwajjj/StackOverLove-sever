@@ -43,6 +43,47 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+app.get("/findUserWithID", async (req, res) => {
+  try {
+    let user = await User.findById({ _id: "68fcc7f1c8cf1c8cdd447a2d" });
+    if (!user) {
+      res.status(404).send("User Not Found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    res.status(500).send("Something Went Wrong");
+  }
+});
+
+app.delete("/deleteUserById", async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete({
+      _id: "68fcc7f1c8cf1c8cdd447a2d",
+    });
+    if (user) {
+      res.send("User Deleted");
+    } else {
+      res.status(404).send("User Not Found");
+    }
+  } catch (err) {
+    res.status(500).send("Something went wrong");
+  }
+});
+
+app.delete("/deleteByAnything", async (req, res) => {
+  try {
+    let user = await User.findOneAndDelete({ username: "onlyVishesh" });
+    if (user) {
+      res.send("User delete with specified filter");
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (err) {
+    res.status(500).send("Something went Wrong");
+  }
+});
+
 dbConnect()
   .then(() => {
     console.log("Database connected successfully");
