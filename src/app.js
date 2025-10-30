@@ -6,13 +6,17 @@ const User = require("./models/user");
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
-
+  let user = new User(req.body);
   try {
-    await user.save();
-    res.send("User Added Succesfully");
+    let savedUser = await user.save();
+
+    if (savedUser) {
+      res.status(200).send("User Saved Successfully ");
+    } else {
+      res.status(404).send("User Not Saved");
+    }
   } catch (err) {
-    res.status(400).send("Error in saving the user Error:" + err.message);
+    res.status(500).send("Something went wrong");
   }
 });
 
