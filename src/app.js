@@ -16,6 +16,33 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/findUser", async (req, res) => {
+  let userEmail = req.body.email;
+  try {
+    let userFound = await User.find({ email: userEmail });
+    if (userFound.length === 0) {
+      res.status(404).send("User Not found");
+    } else {
+      res.send(userFound);
+    }
+  } catch (err) {
+    res.status(500).send("Error while fetching the User");
+  }
+});
+
+app.get("/feed", async (req, res) => {
+  try {
+    let user = await User.find({});
+    if (user.length === 0) {
+      res.status(404).send("Users Not Found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    res.status(500).send("Error while fetching the Users");
+  }
+});
+
 dbConnect()
   .then(() => {
     console.log("Database connected successfully");
