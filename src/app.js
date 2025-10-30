@@ -84,6 +84,22 @@ app.delete("/deleteByAnything", async (req, res) => {
   }
 });
 
+app.patch("/updateUsingPatch", async (req, res) => {
+  try {
+    let user = await User.findOneAndUpdate(
+      { _id: "690339c904914b1842e881a4" },
+      { username: "Rohit ka baap" }
+    );
+    if (user) {
+      res.send("User Updated Successfully");
+    } else {
+      res.status(404).send("User Not Found");
+    }
+  } catch (err) {
+    res.status(500).send("Something went wrong");
+  }
+});
+
 dbConnect()
   .then(() => {
     console.log("Database connected successfully");
