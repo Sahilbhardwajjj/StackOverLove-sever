@@ -53,6 +53,8 @@ const userSchema = new Schema(
     },
     skills: {
       type: [String],
+      minLength: [4, "User must list at least 4 skills."],
+      maxLength: [10, "User cannot list more than 10 skills."],
     },
     age: {
       type: Number,
