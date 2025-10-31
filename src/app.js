@@ -117,7 +117,7 @@ app.patch("/updateUsingPatch/:userID", async (req, res) => {
       new: true,
     });
     if (user) {
-      res.send("User Updated Successfully");
+      res.send("User Updated Successfully in the database");
     } else {
       res.status(404).send("User Not Found");
     }
