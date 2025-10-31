@@ -16,7 +16,7 @@ app.post("/signup", async (req, res) => {
       res.status(404).send("User Not Saved");
     }
   } catch (err) {
-    res.status(500).send("Something went wrong");
+    res.status(500).send("Something Went Wrong . Error : " + err.message);
   }
 });
 
@@ -89,18 +89,21 @@ app.delete("/deleteByAnything", async (req, res) => {
 });
 
 app.patch("/updateUsingPatch", async (req, res) => {
+  let userID = req.body._id;
+  let update = req.body;
+  console.log(update);
   try {
-    let user = await User.findOneAndUpdate(
-      { _id: "690339c904914b1842e881a4" },
-      { username: "Rohit ka baap" }
-    );
+    let user = await User.findOneAndUpdate({ _id: userID }, update, {
+      runValidators: true,
+      new: true,
+    });
     if (user) {
       res.send("User Updated Successfully");
     } else {
       res.status(404).send("User Not Found");
     }
   } catch (err) {
-    res.status(500).send("Something went wrong");
+    res.status(500).send(err.message);
   }
 });
 
