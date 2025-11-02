@@ -70,7 +70,10 @@ app.post("/login", async (req, res) => {
     );
     if (PasswordCorrect) {
       // create a JWT token
-      const token = jwt.sign({ _id: userPresent._id }, "StackOverLove@123#");
+      const token = await jwt.sign(
+        { _id: userPresent._id },
+        "StackOverLove@123#"
+      );
 
       // Send the token inside the cookie
       res.cookie("token", token);
@@ -87,8 +90,20 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
   try {
     const cookie = req.cookies;
-    console.log(cookie);
-    res.send("Cookie received");
+    const { token } = cookie;
+    if (!token) {
+      throw new Error("Invalid Token");
+    }
+
+    // Validating the token
+    const decodedMessage = await jwt.verify(token, "StackOverLove@123#");
+    const { _id } = decodedMessage;
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    res.send(user);
   } catch (err) {
     res.status(500).send("Something Went Wrong Error:" + err.message);
   }
