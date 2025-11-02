@@ -5,8 +5,11 @@ const User = require("./models/user");
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async (req, res) => {
   const { username, firstName, email, password, role, bio, skills, age } =
@@ -66,10 +69,26 @@ app.post("/login", async (req, res) => {
       userPresent.password
     );
     if (PasswordCorrect) {
+      // create a JWT token
+      const token = jwt.sign({ _id: userPresent._id }, "StackOverLove@123#");
+
+      // Send the token inside the cookie
+      res.cookie("token", token);
+
       res.status(200).send("User Login succesfull");
     } else {
       throw new Error("Password Not Correct");
     }
+  } catch (err) {
+    res.status(500).send("Something Went Wrong Error:" + err.message);
+  }
+});
+
+app.get("/profile", async (req, res) => {
+  try {
+    const cookie = req.cookies;
+    console.log(cookie);
+    res.send("Cookie received");
   } catch (err) {
     res.status(500).send("Something Went Wrong Error:" + err.message);
   }
