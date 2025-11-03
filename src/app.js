@@ -73,11 +73,15 @@ app.post("/login", async (req, res) => {
       // create a JWT token
       const token = await jwt.sign(
         { _id: userPresent._id },
-        "StackOverLove@123#"
+        "StackOverLove@123#",
+        { expiresIn: "7d" }
       );
 
       // Send the token inside the cookie
-      res.cookie("token", token);
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+        httpOnly: true,
+      });
 
       res.status(200).send("User Login succesfull");
     } else {
@@ -99,7 +103,8 @@ app.get("/profile", userAuth, async (req, res) => {
 
 app.post("/sendConnectionRequest", userAuth, async (req, res) => {
   try {
-    res.send("Hii there");
+    const user = req.user;
+    res.send(user.username + " Sent the request");
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
