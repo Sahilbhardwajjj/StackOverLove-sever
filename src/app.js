@@ -65,17 +65,12 @@ app.post("/login", async (req, res) => {
     }
 
     // Password matches with password stored in the database
-    const PasswordCorrect = await bcrypt.compare(
-      password,
-      userPresent.password
-    );
+    const PasswordCorrect = await userPresent.validatePassword(password);
+
+    // After matching the password
     if (PasswordCorrect) {
       // create a JWT token
-      const token = await jwt.sign(
-        { _id: userPresent._id },
-        "StackOverLove@123#",
-        { expiresIn: "7d" }
-      );
+      const token = await userPresent.getJWT();
 
       // Send the token inside the cookie
       res.cookie("token", token, {
