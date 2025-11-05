@@ -1,6 +1,6 @@
 const express = require("express");
-const validateSignUpData = require("./utils/validation");
-const User = require("./models/user");
+const validateSignUpData = require("../utils/validation");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 
