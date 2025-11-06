@@ -3,6 +3,7 @@ const { validateSignUpData } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const userAuth = require("../middlewares/auth");
 
 const authRouter = express.Router();
 
@@ -91,6 +92,64 @@ authRouter.post("/logout", async (req, res) => {
     }
   } catch (err) {
     res.status(500).send("Something went wrong");
+  }
+});
+
+authRouter.post("/forgotPassword", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    // Check if Email is Valid or Not
+    const isEmail = validator.isEmail(email);
+    if (!isEmail) {
+      throw new Error("Email is not Valid");
+    }
+
+    // Now checking if the Email is Present in the database
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Verfiy with OTP on Email
+
+    // Now Changing Password
+    if (validator.isStrongPassword(password)) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      user.password = passwordHash;
+      user.save();
+      res.send("Password Updated");
+    } else {
+      throw new Error("Enter a Strong Password");
+    }
+  } catch (err) {
+    res.status(500).send("Err: " + err.message);
+  }
+});
+
+authRouter.patch("/changePassword", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    const { password, newPassword } = req.body;
+
+    // Check if the password is correct with the user
+    const isPasswordValid = await user.validatePassword(password);
+    if (!isPasswordValid) {
+      res.status(404).send("Password not Correct");
+    }
+
+    // Now Check if the newPassword is Strong
+    const isPasswordStrong = validator.isStrongPassword(newPassword);
+    if (!isPasswordStrong) {
+      throw new Error("Enter a Strong Password");
+    }
+
+    // Then Update the Password with newPassword
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+    user.password = newPasswordHash;
+    user.save();
+    res.status(200).json({ message: "Password Changed Successfully" });
+  } catch (err) {
+    res.status(500).send("Err: " + err.message);
   }
 });
 
