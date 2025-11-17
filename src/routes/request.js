@@ -5,6 +5,7 @@ const User = require("../models/user");
 
 const requestRouter = express.Router();
 
+// "ignored" "interested"
 requestRouter.post(
   "/request/send/:status/:toUserId",
   userAuth,
@@ -68,6 +69,52 @@ requestRouter.post(
       });
     } catch (err) {
       res.status(400).send("Error: " + err.message);
+    }
+  }
+);
+
+// "accepted" , "rejected"
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const status = req.params.status;
+      const requestId = req.params.requestId;
+      const loggedInUser = req.user;
+
+      // Validating the status
+      const allowedStatus = ["accepted", "rejected"];
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).json({
+          message: `${status} not allowed`,
+        });
+      }
+
+      // Finding connectionRequest in the DB
+      const connectionRequest = await ConnectionRequestModel.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      if (!connectionRequest) {
+        return res.status(400).json({
+          message: "Connection request is not found",
+        });
+      }
+
+      // Now changing the status
+      connectionRequest.status = status;
+
+      // Saving the connection request
+      const data = await connectionRequest.save();
+
+      res.status(200).json({
+        message: "connection request saved",
+        data,
+      });
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
     }
   }
 );
