@@ -30,15 +30,26 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
-    // Finding all the accepted connection request where from and to is loggedInUser
+    // Finding all the accepted connection request where "from" and "to" is loggedInUser
     const connectionRequestAccepted = await ConnectionRequestModel.find({
       $or: [{ toUserId: loggedInUser._id }, { fromUserId: loggedInUser._id }],
       status: "accepted",
-    }).populate(["fromUserId", "toUserId"], ["firstName", "lastName"]);
+    })
+      .populate("fromUserId", ["firstName", "lastName", "role", "age"])
+      .populate("toUserId", ["firstName", "lastName", "role", "age"]);
+
+    const data = connectionRequestAccepted.map((v) => {
+      if (loggedInUser._id.equals(v.fromUserId._id)) {
+        return v.toUserId;
+      } else {
+        return v.fromUserId;
+      }
+    });
 
     res.status(200).json({
-      message: "All the Connection Requests of " + loggedInUser.firstName,
-      connectionRequestAccepted,
+      message:
+        loggedInUser.firstName + " have " + data.length + " connection request",
+      data,
     });
   } catch (err) {
     res.status(400).json({
