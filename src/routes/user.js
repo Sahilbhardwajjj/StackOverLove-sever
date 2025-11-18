@@ -1,6 +1,7 @@
 const express = require("express");
 const userAuth = require("../middlewares/auth");
 const ConnectionRequestModel = require("../models/connectionRequest");
+const User = require("../models/user");
 const userRouter = express.Router();
 
 // Get all the pending connection request (interested) for LoggedInUser
@@ -50,6 +51,39 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       message:
         loggedInUser.firstName + " have " + data.length + " connection request",
       data,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: "Error : " + err.message,
+    });
+  }
+});
+
+// User should not see (his own card & accepted/rejected/ignored/interested)
+userRouter.get("/user/feed", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    // Getting all connectionRequest where loggedInUser is present in "fromUserId" and "toUserId"
+    const connectionRequests = await ConnectionRequestModel.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+    }).select("fromUserId toUserId");
+
+    // Creating a Set which has unique Id's from connection request
+    const hideUserFromFeed = new Set();
+    connectionRequests.forEach((k) => {
+      hideUserFromFeed.add(k.fromUserId.toString()),
+        hideUserFromFeed.add(k.toUserId.toString());
+    });
+
+    // Fetching User which are not present in hideUserFromFeed
+    const usersOnFeed = await User.find({
+      _id: { $nin: [...hideUserFromFeed], $ne: loggedInUser._id },
+    }).select("firstName lastName");
+
+    res.status(200).json({
+      message: "Feed of User",
+      usersOnFeed,
     });
   } catch (err) {
     res.status(400).json({
