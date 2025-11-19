@@ -73,7 +73,10 @@ authRouter.post("/login", async (req, res) => {
         httpOnly: true,
       });
 
-      res.status(200).send("User Login succesfull");
+      res.status(200).json({
+        message: "User LoggedIn Successfully",
+        data: userPresent,
+      });
     } else {
       throw new Error("Password Not Correct");
     }
