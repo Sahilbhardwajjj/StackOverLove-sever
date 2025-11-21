@@ -84,13 +84,15 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     const usersOnFeed = await User.find({
       _id: { $nin: [...hideUserFromFeed], $ne: loggedInUser._id },
     })
-      .select("firstName lastName")
+      .select(
+        "firstName lastName dateOfBirth gender role bio skills age photoUrl"
+      )
       .skip(skip)
       .limit(limit);
 
     res.status(200).json({
       message: "Feed of User",
-      usersOnFeed,
+      data: usersOnFeed,
     });
   } catch (err) {
     res.status(400).json({

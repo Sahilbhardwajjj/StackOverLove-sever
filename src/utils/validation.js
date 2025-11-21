@@ -22,10 +22,12 @@ const validateEditProfileData = (req) => {
   const allowedUpdates = [
     "firstName",
     "lastName",
+    "role",
     "gender",
     "bio",
     "skills",
     "age",
+    "photoUrl",
   ];
 
   const isAllowed = Object.keys(req.body).every((k) =>

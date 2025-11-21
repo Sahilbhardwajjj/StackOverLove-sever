@@ -8,8 +8,17 @@ const userAuth = require("../middlewares/auth");
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
-  const { username, firstName, email, password, role, bio, skills, age } =
-    req.body;
+  const {
+    username,
+    firstName,
+    email,
+    password,
+    role,
+    bio,
+    skills,
+    age,
+    photoUrl,
+  } = req.body;
   try {
     // Validate SignUp Data
     validateSignUpData(req);
@@ -27,6 +36,7 @@ authRouter.post("/signup", async (req, res) => {
       bio,
       skills,
       age,
+      photoUrl,
     });
 
     //Saving the user
@@ -50,13 +60,13 @@ authRouter.post("/login", async (req, res) => {
       return validator.isEmail(value);
     };
     if (!ValidatedEmail(email)) {
-      throw new Error("Enter a Valid Email Address");
+      return res.status(400).json({ message: "Enter a Valid Email Address" });
     }
 
     // Email is present in the database
     const userPresent = await User.findOne({ email: email });
     if (!userPresent) {
-      throw new Error("You are not signedUp.");
+      return res.status(400).json({ message: "Enter a Valid Email Address" });
     }
 
     // Password matches with password stored in the database
@@ -78,10 +88,10 @@ authRouter.post("/login", async (req, res) => {
         data: userPresent,
       });
     } else {
-      throw new Error("Password Not Correct");
+      return res.status(400).json({ message: "Password Not Correct" });
     }
   } catch (err) {
-    res.status(500).send("Something Went Wrong Error:" + err.message);
+    res.status(500).json({ message: err.message });
   }
 });
 

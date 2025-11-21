@@ -16,9 +16,12 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: true,
+      minLength: 3,
+      maxLength: 10,
     },
     lastName: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -42,7 +45,8 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female"],
+      enum: ["Male", "Female", "Others", "Prefer Not to Say"],
+      required: true,
     },
     role: {
       type: String,
@@ -63,6 +67,9 @@ const userSchema = new Schema(
       required: true,
       min: [18, "Age is less that required"],
       max: [70, "Age is too big , you should do meditation"],
+    },
+    photoUrl: {
+      type: String,
     },
   },
   { timestamps: true }

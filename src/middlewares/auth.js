@@ -7,7 +7,9 @@ const userAuth = async (req, res, next) => {
     //Read the token from the req
     const { token } = req.cookies;
     if (!token) {
-      throw new Error("Token not Valid");
+      return res.status(401).json({
+        message: "Please LoginIn",
+      });
     }
 
     // Verfying the token
@@ -16,7 +18,9 @@ const userAuth = async (req, res, next) => {
     // Finding the user from the _id
     const user = await User.findById(_id);
     if (!user) {
-      throw new Error("User Not Found");
+      return res.status(400).json({
+        message: "User is not Available",
+      });
     }
 
     //Sending User to the Request handler

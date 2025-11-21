@@ -7,16 +7,21 @@ const profileRouter = express.Router();
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
-    res.send(user);
+    res.status(200).json({
+      message: "User Profile",
+      data: user,
+    });
   } catch (err) {
     res.status(500).send("Something Went Wrong Error:" + err.message);
   }
 });
 
-profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
+profileRouter.post("/profile/edit", userAuth, async (req, res) => {
   try {
     if (!validateEditProfileData(req)) {
-      throw new Error("Edit Fields are not valid");
+      res.status(400).json({
+        message: "Edit Fields are not valid",
+      });
     }
 
     const loggedInUser = req.user;
@@ -33,7 +38,9 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       data: loggedInUser,
     });
   } catch (err) {
-    res.status(500).send("Something Went Wrong Error:" + err.message);
+    res.status(500).json({
+      message: err.message,
+    });
   }
 });
 
