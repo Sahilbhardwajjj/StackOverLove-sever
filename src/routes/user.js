@@ -13,11 +13,20 @@ userRouter.get("/user/requests", userAuth, async (req, res) => {
     const connectionRequests = await ConnectionRequestModel.find({
       toUserId: loggedInUser._id,
       status: "interested",
-    }).populate("fromUserId", ["firstName", "lastName"]);
+    }).populate("fromUserId", [
+      "firstName",
+      "lastName",
+      "role",
+      "age",
+      "gender",
+      "photoUrl",
+      "bio",
+      "skills",
+    ]);
 
     res.status(200).json({
       message: "The connection request you have ",
-      connectionRequests,
+      data: connectionRequests,
     });
   } catch (err) {
     res.status(400).json({
@@ -36,8 +45,26 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       $or: [{ toUserId: loggedInUser._id }, { fromUserId: loggedInUser._id }],
       status: "accepted",
     })
-      .populate("fromUserId", ["firstName", "lastName", "role", "age"])
-      .populate("toUserId", ["firstName", "lastName", "role", "age"]);
+      .populate("fromUserId", [
+        "firstName",
+        "lastName",
+        "role",
+        "age",
+        "gender",
+        "photoUrl",
+        "bio",
+        "skills",
+      ])
+      .populate("toUserId", [
+        "firstName",
+        "lastName",
+        "role",
+        "age",
+        "gender",
+        "photoUrl",
+        "bio",
+        "skills",
+      ]);
 
     const data = connectionRequestAccepted.map((v) => {
       if (loggedInUser._id.equals(v.fromUserId._id)) {
