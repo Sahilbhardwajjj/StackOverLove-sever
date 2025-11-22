@@ -25,7 +25,7 @@ requestRouter.post(
       }
 
       // CC : Allowing only "ignored" "interested" to be Valid
-      const allowedStatus = ["ignored", "interested"];
+      const allowedStatus = ["interested", "ignored"];
       if (!allowedStatus.includes(status)) {
         return res
           .status(400)

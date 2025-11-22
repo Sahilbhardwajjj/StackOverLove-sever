@@ -21,7 +21,6 @@ const userSchema = new Schema(
     },
     lastName: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -46,7 +45,6 @@ const userSchema = new Schema(
     gender: {
       type: String,
       enum: ["Male", "Female", "Others", "Prefer Not to Say"],
-      required: true,
     },
     role: {
       type: String,

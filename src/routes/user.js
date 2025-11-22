@@ -116,6 +116,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       )
       .skip(skip)
       .limit(limit);
+    console.log(usersOnFeed);
 
     res.status(200).json({
       message: "Feed of User",
