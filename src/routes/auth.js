@@ -48,7 +48,10 @@ authRouter.post("/signup", async (req, res) => {
       res.status(404).send("User Not Saved");
     }
   } catch (err) {
-    res.status(500).send("Something Went Wrong . Error : " + err.message);
+    res.status(500).json({
+      message: "Something went wrong",
+      Error: err.message,
+    });
   }
 });
 

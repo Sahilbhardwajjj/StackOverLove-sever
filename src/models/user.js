@@ -48,7 +48,6 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "moderator", "user"],
       default: "user",
     },
     bio: {
@@ -70,7 +69,7 @@ const userSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Creating index

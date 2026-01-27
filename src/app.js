@@ -6,11 +6,11 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Must be the EXACT domain/port of your frontend
+    origin: ["http://localhost:5180", "http://localhost:3000"], // Must be the EXACT domain/port of your frontend
     credentials: true, // Must be true because your client uses withCredentials: true
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Ensure PATCH and OPTIONS are allowed
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 app.use(express.json());
 app.use(cookieParser());

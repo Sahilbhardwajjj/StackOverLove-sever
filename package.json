@@ -4,7 +4,7 @@
   "description": "tinder for dev people ",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
+    "server": "nodemon ./src/app.js",
     "start": "node ./src/app.js"
   },
   "keywords": [
