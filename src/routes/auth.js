@@ -100,12 +100,8 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/logout", async (req, res) => {
   try {
-    const isLogout = res.clearCookie("token");
-    if (!isLogout) {
-      throw new Error("User not logged out ");
-    } else {
-      res.status(200).send("User Logout Successfull");
-    }
+    res.clearCookie("token", { path: "/" });
+    res.status(200).send("User Logout Successfull");
   } catch (err) {
     res.status(500).send("Something went wrong");
   }

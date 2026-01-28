@@ -48,20 +48,26 @@ const profileRouter = require("./src/routes/profile");
 const requestRouter = require("./src/routes/request");
 const userRouter = require("./src/routes/user");
 
-// Health check endpoint for Vercel
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "OK", message: "Server is running" });
-});
-
 // API Routes
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
-// Handle 404 for unmatched routes
+// Root route handler - prevents 404 on base URL
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "StackOverLove API is running",
+    status: "success",
+  });
+});
+
+// 404 handler for unmatched routes
 app.use((req, res) => {
-  res.status(404).json({ error: `Cannot ${req.method} ${req.path}` });
+  res.status(404).json({
+    message: "Route not found",
+    path: req.path,
+  });
 });
 
 module.exports = app;
