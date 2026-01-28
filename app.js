@@ -1,28 +1,22 @@
 require("dotenv").config();
 const express = require("express");
+const app = express();
 const dbConnect = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const app = express();
-
-// Cache the database connection globally to reuse across serverless invocations
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedDb) {
-    return cachedDb;
-  }
+let isConnected = false;
+const connectToDatabase = async () => {
+  if (isConnected) return;
   try {
     await dbConnect();
-    cachedDb = true;
+    isConnected = true;
     console.log("Database connected successfully");
-    return cachedDb;
   } catch (err) {
     console.error("Database Connection Error:", err.message);
     throw err;
   }
-}
+};
 
 app.use(
   cors({
@@ -40,7 +34,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Initialize database connection on app startup
 app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -55,10 +48,20 @@ const profileRouter = require("./src/routes/profile");
 const requestRouter = require("./src/routes/request");
 const userRouter = require("./src/routes/user");
 
+// Health check endpoint for Vercel
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK", message: "Server is running" });
+});
+
+// API Routes
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
-// Export the app for Vercel
+// Handle 404 for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({ error: `Cannot ${req.method} ${req.path}` });
+});
+
 module.exports = app;
