@@ -1,12 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const dbConnect = require("./config/database");
+const dbConnect = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-// 1. Database Connection Logic (Serverless optimized)
-// In serverless, we connect once and reuse the connection across invocations.
 let isConnected = false;
 const connectToDatabase = async () => {
   if (isConnected) return;
@@ -36,7 +34,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// 2. Middleware to ensure DB is connected before processing any request
 app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -46,16 +43,14 @@ app.use(async (req, res, next) => {
   }
 });
 
-const authRouter = require("./routes/auth");
-const profileRouter = require("./routes/profile");
-const requestRouter = require("./routes/request");
-const userRouter = require("./routes/user");
+const authRouter = require("./src/routes/auth");
+const profileRouter = require("./src/routes/profile");
+const requestRouter = require("./src/routes/request");
+const userRouter = require("./src/routes/user");
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
-// 3. EXPORT THE APP (Crucial for Vercel)
-// Do not use app.listen() here as Vercel manages the server life cycle.
 module.exports = app;
