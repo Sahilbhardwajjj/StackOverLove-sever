@@ -1,22 +1,28 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
 const dbConnect = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-let isConnected = false;
-const connectToDatabase = async () => {
-  if (isConnected) return;
+const app = express();
+
+// Cache the database connection globally to reuse across serverless invocations
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
   try {
     await dbConnect();
-    isConnected = true;
+    cachedDb = true;
     console.log("Database connected successfully");
+    return cachedDb;
   } catch (err) {
     console.error("Database Connection Error:", err.message);
     throw err;
   }
-};
+}
 
 app.use(
   cors({
@@ -34,6 +40,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Initialize database connection on app startup
 app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
@@ -53,4 +60,5 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+// Export the app for Vercel
 module.exports = app;

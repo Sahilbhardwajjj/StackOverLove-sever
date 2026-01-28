@@ -2,7 +2,10 @@
   "name": "devtinder",
   "version": "1.0.0",
   "description": "tinder for dev people ",
-  "main": "index.js",
+  "main": "app.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "server": "nodemon app.js",
     "start": "node app.js",
