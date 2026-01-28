@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const dbConnect = require("./config/database");
@@ -6,7 +7,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["http://localhost:5180", "http://localhost:3000"], // Must be the EXACT domain/port of your frontend
+    origin: [process.env.FRONTEND_URL_1, process.env.FRONTEND_URL_2], // Must be the EXACT domain/port of your frontend
     credentials: true, // Must be true because your client uses withCredentials: true
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Ensure PATCH and OPTIONS are allowed
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -25,11 +26,13 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+const PORT = process.env.PORT;
+
 dbConnect()
   .then(() => {
     console.log("Database connected successfully");
-    app.listen(3000, () => {
-      console.log("Server is listening to port 3000");
+    app.listen(PORT, () => {
+      console.log(`Server is listening to port ${PORT}`);
     });
   })
   .catch((err) => {

@@ -5,6 +5,8 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+require("dotenv").config();
+
 const userSchema = new Schema(
   {
     username: {
@@ -77,7 +79,7 @@ userSchema.index({ firstName: 1, lastName: 1 });
 
 // Making methods for the User Schema
 userSchema.methods.getJWT = async function () {
-  const token = await jwt.sign({ _id: this._id }, "StackOverLove@123#", {
+  const token = await jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
@@ -13,7 +14,7 @@ const userAuth = async (req, res, next) => {
     }
 
     // Verfying the token
-    const { _id } = await jwt.verify(token, "StackOverLove@123#");
+    const { _id } = await jwt.verify(token, process.env.JWT_SECRET);
 
     // Finding the user from the _id
     const user = await User.findById(_id);
