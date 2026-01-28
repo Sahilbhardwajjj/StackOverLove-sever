@@ -30,6 +30,11 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "StackOverLove API is running!" });
+});
+
 const PORT = process.env.PORT || 3000;
 
 dbConnect()
