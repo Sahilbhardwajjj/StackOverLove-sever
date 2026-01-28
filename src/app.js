@@ -7,7 +7,11 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL_1, process.env.FRONTEND_URL_2], // Must be the EXACT domain/port of your frontend
+    origin: [
+      process.env.FRONTEND_URL_1,
+      process.env.FRONTEND_URL_2,
+      process.env.FRONTEND_URL_3,
+    ], // Must be the EXACT domain/port of your frontend
     credentials: true, // Must be true because your client uses withCredentials: true
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"], // Ensure PATCH and OPTIONS are allowed
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -26,7 +30,7 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 dbConnect()
   .then(() => {
