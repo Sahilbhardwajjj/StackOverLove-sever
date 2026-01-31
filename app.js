@@ -20,11 +20,22 @@ const connectToDatabase = async () => {
 
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL_1,
-      process.env.FRONTEND_URL_2,
-      process.env.FRONTEND_URL_3,
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        process.env.FRONTEND_URL_1,
+        process.env.FRONTEND_URL_2,
+        process.env.FRONTEND_URL_3,
+      ].filter(Boolean); // Remove undefined/null values
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
