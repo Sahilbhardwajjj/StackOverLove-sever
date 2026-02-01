@@ -54,16 +54,14 @@ const userSchema = new Schema(
     },
     bio: {
       type: String,
-      default: "Default about of user",
+      default: "",
     },
     skills: {
       type: [String],
-      minLength: [4, "User must list at least 4 skills."],
-      maxLength: [10, "User cannot list more than 10 skills."],
+      default: [],
     },
     age: {
       type: Number,
-      required: true,
       min: [18, "Age is less that required"],
       max: [70, "Age is too big , you should do meditation"],
     },

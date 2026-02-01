@@ -8,17 +8,7 @@ const userAuth = require("../middlewares/auth");
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {
-  const {
-    username,
-    firstName,
-    email,
-    password,
-    role,
-    bio,
-    skills,
-    age,
-    photoUrl,
-  } = req.body;
+  const { username, firstName, email, password } = req.body;
   try {
     // Validate SignUp Data
     validateSignUpData(req);
@@ -32,11 +22,6 @@ authRouter.post("/signup", async (req, res) => {
       firstName,
       email,
       password: hashedPassword,
-      role,
-      bio,
-      skills,
-      age,
-      photoUrl,
     });
 
     //Saving the user

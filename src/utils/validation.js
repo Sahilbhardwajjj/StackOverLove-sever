@@ -20,6 +20,7 @@ const validateSignUpData = (req) => {
 
 const validateEditProfileData = (req) => {
   const allowedUpdates = [
+    "username",
     "firstName",
     "lastName",
     "role",
@@ -31,7 +32,7 @@ const validateEditProfileData = (req) => {
   ];
 
   const isAllowed = Object.keys(req.body).every((k) =>
-    allowedUpdates.includes(k)
+    allowedUpdates.includes(k),
   );
 
   return isAllowed;
