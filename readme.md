@@ -65,10 +65,6 @@ You must have **Node.js** and **npm** installed on your machine.
     PORT=5000
     MONGO_URI=your_mongodb_connection_string
     JWT_SECRET=your_secret_key_for_auth
-
-    # Client Configuration
-    # (Optional, define if using a different port or external services)
-    # REACT_APP_API_URL=http://localhost:5000/api
     ```
 
 4.  **Run the Application:**
@@ -85,8 +81,6 @@ You must have **Node.js** and **npm** installed on your machine.
     ```bash
     npm start
     ```
-
-The application should now be accessible at `http://localhost:3000`.
 
 ## 🤝 Contribution
 
